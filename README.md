@@ -31,12 +31,13 @@ In this tutorial, we observe various network traffic to and from Azure Virtual M
 - Step 4
 
 <h2>Actions and Observations</h2>
-Welcome to my tutorial on Network Security Groups and Inspecting Network Protocols. You will need to create a resource group plus two VMs on Azure, one of which will be a Linux machine, and the other will be a Windows 10 machine. Both will have two CPUs, and they must be on the same VNET. Now, go into the Azure portal and create a resource group named RG-Network-Activities. Set it to East US 2 and click Create. Now you'll have to create a Windows 10 virtual machine. Set the resource group to RG-Network-Activities, which is the resource group you just created. Then the virtual machine name is windows-vm, and the region is East US 2. Then, for the image, set it as Windows 10 Pro, and for the size, pick one that has at least 2 CPUs. For the username, enter 'labuser' and the password 'Cyberlab123!'. Confirm the licensing and click 'Next' until you reach the networking section. For the Virtual Network, click 'Create New' and set it to 'Lab2-Vnet'. Afterwards, click review and create. Next, you have to create a Linux VM. Set the resource group to RG-Network-Activities and name the machine as linux-vm. Next, set the region to East US 2, and then, for the image, set it to Ubuntu Server 2022. After that, set the username to labuser and the password to Cyberlab123! and confirm the license agreement. Now, click next until you go to Networking and for Virtual network, and make sure it is set to Lab2-Vnet, then hit create. 
+Welcome to my tutorial on Network Security Groups and Inspecting Network Protocols. You will need to create a resource group plus two VMs on Azure, one of which will be a Linux machine, and the other will be a Windows 10 machine. Both will have two CPUs, and they must be on the same VNET. Now, go into the Azure portal and create a resource group named RG-Network-Activities. Set it to East US 2 and click Create. Now you'll have to create a Windows 10 virtual machine. Set the resource group to RG-Network-Activities, which is the resource group you just created. Then the virtual machine name is windows-vm, and the region is East US 2. Then, for the image, set it as Windows 10 Pro, and for the size, pick one that has at least 2 CPUs. For the username, enter 'labuser' and the password 'Cyberlab123!'. Confirm the licensing and click 'Next' until you reach the networking section. For the Virtual Network, click 'Create New' and set it to 'Lab2-Vnet'. Afterwards, click review and create. 
 <p>
 <img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+Next, you have to create a Linux VM. Set the resource group to RG-Network-Activities and name the machine as linux-vm. Next, set the region to East US 2, and then, for the image, select Ubuntu Server 2022. After that, set the username to labuser and the password to Cyberlab123! and confirm the license agreement. Now, click Next until you reach Networking, and for Virtual Network, ensure it is set to Lab2-Vnet. Then, click Create. 
+<p>
 </p>
 <br />
 
@@ -44,14 +45,26 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 <img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-</p>
+After that, use Remote Desktop to connect to the Windows VM you just created and download Wireshark. I will attach a link to the Wireshark download https://www.wireshark.org/download.html. Once installed, open Wireshark and filter for ICMP Traffic only. ICMP (Internet Control Message Protocol) is a network layer protocol; it's like the messenger of the internet. Its job is to send quick updates about network problems. Ping uses ICMP to check if a device is reachable, plus traceroute uses ICMP to see the path your data takes. When we filter Wireshark to only capture ICMP packets and ping the private IP address of our Linux machine, we can visually see the packets on Wireshark.
 <br />
 
 <p>
 <img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+We can inspect each packet and see the actual data that is being sent in each ping. The picture below demonstrates just that.
+<br />
+
+<p>
+<img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
-<br /># azure-network-protocols
+<p>
+Now we are going to initiate a perpetual/non-stop ping from your Windows 10 VM to your Ubuntu VM by pinging the private IP address of the Linux machine with the command ping -t. While the Windows machine is pinging the Linux machine, we will go to the Linux machine and block inbound ICMP traffic on its firewall. Now go to Virtual machines on the Azure Portal and click on your Linux VM. Then select networking -> network settings -> Network security group -> settings -> inbound security rules _> add to create a rule. Put * for destination port ranges and pick ICMPv4 for Protocol. Then, for action select Deny, and for Priority put 290 and click add.
+<br />
+
+<p>
+<img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+</p>
+<p>
+
+
