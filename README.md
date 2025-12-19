@@ -59,12 +59,33 @@ We can inspect each packet and see the actual data that is being sent in each pi
 <img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
 <p>
-Now we are going to initiate a perpetual/non-stop ping from your Windows 10 VM to your Ubuntu VM by pinging the private IP address of the Linux machine with the command ping -t. While the Windows machine is pinging the Linux machine, we will go to the Linux machine and block inbound ICMP traffic on its firewall. Now go to Virtual machines on the Azure Portal and click on your Linux VM. Then select networking -> network settings -> Network security group -> settings -> inbound security rules _> add to create a rule. Put * for destination port ranges and pick ICMPv4 for Protocol. Then, for action select Deny, and for Priority put 290 and click add.
+Now we are going to initiate a perpetual/non-stop ping from your Windows 10 VM to your Ubuntu VM by pinging the private IP address of the Linux machine with the command ping -t. While the Windows machine is pinging the Linux machine, we will go to the Linux machine and block inbound ICMP traffic on its firewall. Now, go to Virtual machines on the Azure Portal and click on your Linux VM. Then select networking -> network settings -> Network security group -> settings -> inbound security rules _> add to create a rule. Put * for destination port ranges and pick ICMPv4 for Protocol. Then, for action select Deny, and for Priority put 290 and click add. We can allow the traffic by allowing ICMP on the Linux Network Security Groups page on Azure. After that, stop the nonstop ping from the Windows VM PowerShell or command prompt, or whichever you chose to ping from the Windows VM to the Linux VM, by putting the command control c on Windows.   
 <br />
 
 <p>
 <img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
 <p>
+Next, we go back to Wire Shark on the Windows VM and start a packet capture and filter out ssh traffic only. SSH (Secure Shell) is like  a secure, encrypted tunnel that lets you remotely control and transfer files between computers over the internet, as if you were sitting right in front of the other machine. Then Open PowerShell, and type: ssh labuser@<private IP address>. Ex: ssh labuser@10.00.5 and they answer yes to the question and enter Cyberlab123! for the password. Now you will see ssh traffic in Wireshark, and when you're done, go back to PowerShell and type exit in the command line to end the ssh connection.
+<br />
 
+<p>
+<img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+</p>
+<p>
+Now we will use Wireshark to filter for DHCP. DHCP is the Dynamic Host Configuration Protocol this works on ports 67/68. It is used to assign IP addresses to machines. Open PowerShell as admin and run: ipconfig /renew and observe the DHCP traffic appearing in Wireshark.
+<br />
+
+<p>
+<img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+</p>
+<p>
+Time to filter DNS traffic. We will set Wireshark to filter DNS traffic. We will initiate DNS traffic by typing in the command "nslookup www.google.com". This command essentially asks our DNS server what Google's IP address.
+<br />
+
+<p>
+<img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+</p>
+<p>
+Lastly, we will filter for RDP traffic. When we enter tcp.port==3389, traffic is spammed nonstop because we are using the Remote Desktop Protocol to connect to our Virtual Machine.
 
